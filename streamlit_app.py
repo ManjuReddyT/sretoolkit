@@ -22,7 +22,7 @@ st.markdown(\"""
 <meta name="description" content="A collection of tools for SRE and DevOps engineers, including JSON/XML beautifier, networking utilities, and more.">
 <meta name="keywords" content="SRE, DevOps, JSON, XML, beautifier, utilities, networking, security, text manipulation">
 <meta name="author" content="SRE Toolkit">
-\""", unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 st.title("🚀 Welcome to SRE + DevOps Utility Kit")
 st.write("""
