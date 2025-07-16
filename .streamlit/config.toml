@@ -1,0 +1,8 @@
+[theme]
+base="light"
+primaryColor="#ff4b4b"
+
+[server]
+headless = true
+[ui]
+hideTopBar = true
