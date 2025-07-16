@@ -7,3 +7,5 @@ pandas
 dotenv
 numpy
 requests
+PyJWT
+PyYAML
