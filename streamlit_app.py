@@ -18,7 +18,7 @@ st.set_page_config(
     }
 )
 
-st.markdown(\"""
+st.markdown("""
 <meta name="description" content="A collection of tools for SRE and DevOps engineers, including JSON/XML beautifier, networking utilities, and more.">
 <meta name="keywords" content="SRE, DevOps, JSON, XML, beautifier, utilities, networking, security, text manipulation">
 <meta name="author" content="SRE Toolkit">

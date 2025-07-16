@@ -326,10 +326,6 @@ with tab8:
             api_key = secrets.token_urlsafe(key_length)
             st.code(api_key)
 
-# Footer
-st.markdown("---")
-st.markdown("*🔧 SRE Quick Utilities Hub - Making SRE tasks easier, one tool at a time*")
-
 # Database Tools Tab
 with tab9:
     col1, col2 = st.columns(2)
