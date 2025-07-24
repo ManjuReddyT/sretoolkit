@@ -48,3 +48,10 @@ A comprehensive toolkit with a wide range of utilities for SREs and DevOps engin
    ```
    $ streamlit run streamlit_app.py
    ```
+
+### 3. AI Content Analyzer
+
+A simple interface to interact with a local Ollama API.
+
+- **System Prompt**: Set the context for the AI.
+- **Content Analysis**: Analyze, summarize, or ask questions about your content.
