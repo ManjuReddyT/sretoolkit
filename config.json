@@ -1,0 +1,105 @@
+{
+    "scripts": [
+        {
+            "name": "mySql_logParser",
+            "display_name": "Mysql DB log parser",
+            "description": "Parses Mysql DB logs and shares excel report",
+            "help_text": "### Purpose\nThis script processes a MySQL log file to extract and analyze query performance metrics, such as query execution time, rows examined, and rows sent. It also normalizes queries, aggregates results, and suggests potential indexes for optimization. The results are saved into an Excel file for further analysis.\n\n### Key Features\n1. **Dependencies**:\n   - Uses libraries like `pandas` for data manipulation, `re` for regex operations, `sqlparse` for parsing SQL queries, and `argparse` for handling command-line arguments.\n\n2. **Normalization Function**:\n   - The `normalize_query` function removes specific values (e.g., literals, numbers) from SQL queries and converts them to uppercase for consistency. This helps in grouping similar queries for analysis.\n\n3. **Log Parsing**:\n   - The `parse_mysql_log` function extracts key metrics from the MySQL log file, such as:\n     - Query execution time (`Query_time`).\n     - Lock time (`Lock_time`).\n     - Rows sent (`Rows_sent`).\n     - Rows examined (`Rows_examined`).\n     - Original and normalized queries.\n\n4. **Data Aggregation**:\n   - Aggregates query metrics by normalized queries, calculating:\n     - Execution count.\n     - Minimum, maximum, and average query execution times.\n     - A sampl...",
+            "inputs": [
+                {
+                    "type": "file",
+                    "label": "Upload MySQL Log File(s)",
+                    "name": "input",
+                    "required": true,
+                    "multiple_files": true,
+                    "allowed_extensions": [
+                        ".log",
+                        ".txt"
+                    ]
+                }
+            ],
+            "output_type": "xlsx",
+            "script_path": "scripts/mySql_logParser.py"
+        },
+        {
+            "name": "straceAnalyzer",
+            "display_name": "Strace Analyzer",
+            "description": "Analyzes strace log files to identify system call patterns, performance bottlenecks, and language-specific behaviors.",
+            "help_text": "### Purpose\nThis tool parses and analyzes `strace` log files, providing insights into the system calls made by a process. It helps identify performance bottlenecks, common errors, and now includes language-specific analysis for processes written in Java, Python, or Node.js.\n\n### How to Collect Log Files (Helpful Commands)\nTo use this tool effectively, capture the output of `strace` and save it to a `.log` or `.txt` file.\n\n* **Recommended `strace` command for detailed analysis:**\n    `strace -T -o strace_log.txt <your_command_to_trace>`\n    -   `-T`: Show the time spent in each syscall.\n    -   `-o strace_log.txt`: Redirect output to a file.\n    -   Replace `<your_command_to_trace>` with the actual command you want to trace (e.g., `java -jar myapp.jar`, `python myscript.py`, `node app.js`, or any other executable).\n\n* **Example for a Java application:**\n    `strace -T -o java_strace.log java -jar /path/to/your/application.jar`\n\n* **Example for a Python script:**\n    `strace -T -o python_strace.log python /path/to/your/script.py`\n\n* **Example for a Node.js application:**\n    `strace -T -o node_strace.log node /path/to/your/app.js`\n\n### Usage in this Tool\n1.  **Upload File:** Click 'Browse files' to upload your `.log` or `.txt` file containing the `strace` output.\n2.  The tool will parse the data, display a preview of the raw parsed data, and provide a comprehensive summary analysis, including:\n    -   Most frequent and longest-running system calls.\n    -   Identification of system calls returning errors.\n    -   Summary of I/O and process management related syscalls.\n    -   **Detection of the likely programming language (Java, Python, Node.js, or unknown) and language-specific insights.**\n3.  If AI Analysis is enabled, it will provide an AI-driven interpretation of the `strace` data and suggest actionable recommendations.\n4.  You can download the parsed data as a CSV file for further offline analysis.",
+            "inputs": [
+                {
+                    "type": "file",
+                    "label": "Upload strace Log File(s)",
+                    "name": "log_file",
+                    "required": true,
+                    "multiple_files": true,
+                    "allowed_extensions": [
+                        ".log",
+                        ".txt"
+                    ]
+                }
+            ],
+            "output_type": "streamlit_app",
+            "script_path": "scripts/strace_analyzer.py",
+            "ai_prompt": {
+                "system_role": "You are an expert in Linux system performance, debugging, and software architecture, specializing in analyzing strace output. Your task is to analyze the provided strace summary and raw data, identify potential issues, and suggest targeted solutions.",
+                "task_description": "Analyze the strace data summary. The process might be written in Java, Python, Node.js, or other languages. Focus on identifying bottlenecks, unusual behavior, resource contention, and potential errors based on syscall patterns, durations, and arguments. Pay special attention to language-specific syscall patterns.",
+                "analysis_points": [
+                    "Identify the most frequent and longest-running system calls. What do these indicate about the process's primary activities and potential areas of contention or waiting?",
+                    "Detect patterns of I/O (file, network) and process/thread creation. Are there signs of I/O saturation, excessive process/thread spawning, or inefficient resource handling?",
+                    "Look for system calls returning errors (e.g., EACCES for permission issues, ENOENT for missing files, EAGAIN for resource contention, EPIPE for broken pipes, EINVAL for invalid arguments). What do these errors suggest about misconfigurations, missing resources, race conditions, or programming bugs?",
+                    "Analyze the detected programming language. For **Java/JVM** processes, identify frequent `mmap`/`munmap` (JIT compilation, memory allocation), `openat` calls to `.class` files or JARs (class loading), and `libjvm.so` references (JNI calls). Look for GC-related pauses if duration data is available.\nFor **Python** processes, detect `openat` calls to `.py` files (module imports) and loading of `.so` extension modules. Track potential GIL-related blocking if applicable.\nFor **Node.js** processes, note `libnode.so` and `libv8.so` references (V8 engine activity) and `node_modules` access. Assess event loop delays if possible from durations.",
+                    "Assess memory-related syscalls (e.g., `mmap`, `munmap`, `brk`, `madvise`) for signs of memory pressure, fragmentation, or excessive memory requests.",
+                    "Summarize the overall health and behavior of the traced process, highlighting critical findings.",
+                    "Propose clear, actionable, and prioritized recommendations to optimize performance or resolve identified issues. For language-specific processes, suggest relevant tuning parameters (e.g., JVM options, Python environment optimizations, Node.js event loop best practices) or deeper debugging steps. Also, consider recommendations for handling language-specific error patterns (e.g., Java ClassNotFound, Python ImportError)."
+                ],
+                "output_format": "Provide a comprehensive, structured analysis in markdown format. Start with an **Executive Summary** highlighting the most critical findings. Follow with detailed findings for each category (Syscall Frequency, Duration, Errors, I/O, Process Management, **Language-Specific Analysis**). Conclude with clear, prioritized, and actionable **Recommendations**. Include numerical evidence from the summary to support your points and reference specific syscalls or error types where appropriate."
+            }
+        },
+        {
+            "name": "mongoGCPLogParser",
+            "display_name": "MongoDB GCP Log Parser",
+            "description": "Parses MongoDB GCP audit logs and provides a structured Excel report.",
+            "help_text": "### Purpose\nThis script is designed to parse MongoDB GCP audit log files, extract key information such as operations, users, databases, and timestamps, and generate a structured Excel report. This tool is useful for database administrators and developers who want to analyze MongoDB performance logs and identify slow queries or errors in a structured format.\n",
+            "inputs": [
+                {
+                    "type": "file",
+                    "label": "Upload Logs",
+                    "name": "input",
+                    "required": true,
+                    "multiple_files": true,
+                    "allowed_extensions": [
+                        ".csv",
+                        ".log",
+                        ".txt"
+                    ]
+                }
+            ],
+            "output_type": "xlsx",
+            "script_path": "scripts/mongoGCPLogParser.py"
+        },
+        {
+            "name": "postgresGCPLogParser",
+            "display_name": "Postgres GCP log parser",
+            "description": "Parses postgres logs and shares excel report",
+            "help_text": "### Purpose\nThis script processes a postgres log file to extract and analyze metrics related to slow queries, errors, and other performance-related data. The results are then output into an Excel file for further analysis.",
+            "inputs": [
+                {
+                    "type": "file",
+                    "label": "Upload Logs",
+                    "name": "input",
+                    "ai-analysis": true,
+                    "required": true,
+                    "multiple_files": true,
+                    "allowed_extensions": [
+                        ".csv",
+                        ".log",
+                        ".txt"
+                    ]
+                }
+            ],
+            "output_type": "xlsx",
+            "script_path": "scripts/parse_postgres_log.py"
+        }
+    ]
+}

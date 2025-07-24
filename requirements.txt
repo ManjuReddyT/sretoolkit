@@ -1,11 +1,13 @@
-streamlit
+streamlit>=1.25.0
 xmltodict
 xmlschema
 jsonschema
 streamlit-ace
 pandas
-dotenv
+python-dotenv
 numpy
 requests
 PyJWT
 PyYAML
+openpyxl
+xlsxwriter
