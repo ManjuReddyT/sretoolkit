@@ -50,7 +50,7 @@ crux_reports = st.Page(
 
 
 run_tool = st.Page(
-    "views/runpage.py",
+    "views/run_page.py",
     title="Run Tool",
     icon=":material/play_arrow:",
 )

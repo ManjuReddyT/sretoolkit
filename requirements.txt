@@ -11,3 +11,10 @@ PyJWT
 PyYAML
 openpyxl
 xlsxwriter
+plotly
+kaleido
+werkzeug
+aiohttp
+scikit-learn
+PyPDF2
+PyMuPDF

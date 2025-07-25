@@ -57,6 +57,45 @@
             }
         },
         {
+    "name": "threadDumpAnalyzer",
+    "display_name": "Thread Dump Analyzer",
+    "description": "Analyzes Java thread dump files to identify deadlocks, thread contention, performance bottlenecks, and application-specific threading patterns.",
+    "help_text": "### Purpose\nThis tool parses and analyzes Java thread dump files, providing insights into thread states, lock contention, deadlocks, and performance bottlenecks. It helps identify threading issues, blocked threads, and resource contention patterns in Java applications.\n\n### How to Collect Thread Dumps (Helpful Commands)\nTo use this tool effectively, capture thread dumps from your Java application and save them to `.txt` or `.dump` files.\n\n* **Using jstack (recommended for most cases):**\n    `jstack <pid> > threaddump_$(date +%Y%m%d_%H%M%S).txt`\n    -   Replace `<pid>` with your Java process ID (find using `jps` or `ps aux | grep java`)\n    -   Automatically timestamps the dump file\n\n* **Using kill -3 (sends SIGQUIT to JVM):**\n    `kill -3 <pid>`\n    -   Thread dump will be written to the application's stdout/stderr or log files\n    -   Less intrusive than jstack but output location varies\n\n* **Using jcmd (Java 7+):**\n    `jcmd <pid> Thread.print > threaddump.txt`\n    -   More comprehensive output than jstack\n    -   Includes additional JVM information\n\n* **For multiple dumps (recommended for analysis):**\n    ```bash\n    for i in {1..5}; do\n        jstack <pid> > threaddump_${i}_$(date +%H%M%S).txt\n        sleep 10\n    done\n    ```\n    -   Captures 5 dumps with 10-second intervals\n    -   Helps identify persistent vs. transient issues\n\n* **Using JVisualVM or JConsole:**\n    -   GUI tools that can generate and save thread dumps\n    -   Useful for development and testing environments\n\n* **Application server specific:**\n    -   **Tomcat:** `<CATALINA_HOME>/bin/catalina.sh threaddump`\n    -   **WebLogic:** Use Admin Console or WLST commands\n    -   **WebSphere:** Use wsadmin or IBM Support Assistant\n\n### Usage in this Tool\n1.  **Upload File:** Click 'Browse files' to upload your `.txt` or `.dump` files containing thread dump data.\n2.  The tool will parse the data, display a preview of threads and their states, and provide comprehensive analysis including:\n    -   Thread state distribution (RUNNABLE, BLOCKED, WAITING, etc.)\n    -   Deadlock detection and analysis\n    -   Lock contention hotspots and waiting patterns\n    -   Thread pool analysis and utilization\n    -   **Application framework detection (Spring, Hibernate, Tomcat, etc.) and framework-specific insights**\n    -   CPU-intensive vs. I/O-bound thread identification\n3.  If AI Analysis is enabled, it will provide intelligent interpretation of threading patterns and suggest specific optimization strategies.\n4.  You can download the parsed analysis as a CSV or JSON file for further investigation or sharing with development teams.",
+    "inputs": [
+        {
+            "type": "file",
+            "label": "Upload Thread Dump File(s)",
+            "name": "dump_file",
+            "required": true,
+            "multiple_files": true,
+            "allowed_extensions": [
+                ".txt",
+                ".dump",
+                ".log"
+            ]
+        }
+    ],
+    "output_type": "streamlit_app",
+    "script_path": "scripts/threaddump_analyser.py",
+    "ai_prompt": {
+        "system_role": "You are an expert in Java performance tuning, concurrent programming, and JVM internals, specializing in analyzing thread dumps. Your task is to analyze thread dump data, identify threading issues, deadlocks, and performance bottlenecks, and provide actionable optimization recommendations.",
+        "task_description": "Analyze the thread dump data summary. The application may use various frameworks like Spring, Hibernate, Tomcat, or custom threading models. Focus on identifying deadlocks, thread contention, resource bottlenecks, and inefficient threading patterns based on thread states, stack traces, and lock information.",
+        "analysis_points": [
+            "Identify and analyze thread state distribution (RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, NEW, TERMINATED). What does the distribution indicate about application behavior and potential bottlenecks?",
+            "Detect deadlocks by analyzing circular wait conditions and lock dependencies. Identify the threads and resources involved, and trace the deadlock chain. Explain the root cause and impact.",
+            "Analyze lock contention patterns by identifying threads waiting on the same monitors or locks. Look for synchronized blocks, ReentrantLocks, and other concurrency primitives causing bottlenecks.",
+            "Examine thread pool utilization and patterns. Identify thread pools (Executor services, application server pools, framework-specific pools) and assess their efficiency, queue saturation, and optimal sizing.",
+            "Detect framework-specific patterns: **Spring** (transaction managers, AOP proxies, async processing), **Hibernate** (session management, connection pools, lazy loading), **Tomcat** (HTTP connector threads, session management), **Netty** (event loops, channel handlers), and **custom frameworks**. Identify framework-specific anti-patterns.",
+            "Analyze CPU-intensive vs. I/O-bound thread behavior. Identify threads performing heavy computation, database operations, network I/O, or file system access. Look for threads stuck in long-running operations.",
+            "Examine garbage collection impact on threading. Identify GC-related pauses and their effect on application threads, especially in high-throughput scenarios.",
+            "Look for resource leaks and inefficient patterns: unclosed resources, thread leaks, excessive thread creation, inappropriate use of thread pools, or blocking operations on critical threads.",
+            "Assess application-specific threading patterns and identify opportunities for optimization, such as better thread pool configuration, asynchronous processing, or lock-free algorithms.",
+            "Summarize the overall threading health of the application, highlighting critical issues that need immediate attention vs. optimization opportunities."
+        ],
+        "output_format": "Provide a comprehensive, structured analysis in markdown format. Start with an **Executive Summary** highlighting the most critical threading issues and their business impact. Follow with detailed sections: **Thread State Analysis**, **Deadlock Detection**, **Lock Contention Analysis**, **Thread Pool Assessment**, **Framework-Specific Findings**, **Performance Bottlenecks**, and **Resource Utilization**. Conclude with **Prioritized Recommendations** that include specific configuration changes, code improvements, and monitoring suggestions. Include thread counts, percentages, and specific thread names/stack traces to support findings. Provide actionable solutions with expected impact levels (High/Medium/Low)."
+    }
+},
+        {
             "name": "mongoGCPLogParser",
             "display_name": "MongoDB GCP Log Parser",
             "description": "Parses MongoDB GCP audit logs and provides a structured Excel report.",
