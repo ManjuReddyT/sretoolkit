@@ -12,6 +12,7 @@ import re
 import uuid
 import socket
 import time
+from pages.ai_analyzer import ai_analyzer
 
 # Configure page
 st.set_page_config(page_title="SRE Quick Utilities Hub", page_icon="🔧", layout="wide")
@@ -20,7 +21,7 @@ st.title("🔧 SRE Quick Utilities Hub")
 st.markdown("*A comprehensive toolkit for Site Reliability Engineers*")
 
 # Create tabs for main navigation
-tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12, tab13 = st.tabs([
     "🌐 Network Tools", 
     "🔐 Security Tools", 
     "⏰ Time & Date", 
@@ -32,7 +33,8 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11, tab12 = st.t
     "🗄️ Database Tools",
     "📋 Code Tools",
     "🔧 DevOps Tools",
-    "📈 Data Tools"
+    "📈 Data Tools",
+    "🤖 AI Tools"
 ])
 
 # Network Tools Tab
@@ -641,6 +643,10 @@ with tab12:
                     st.caption("Note: Basic XML conversion - complex data may need custom formatting")
             except Exception as e:
                 st.error(f"❌ Conversion error: {e}")
+
+# AI Tools Tab
+with tab13:
+    ai_analyzer()
 
 # Footer
 st.markdown("---")
