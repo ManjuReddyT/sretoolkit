@@ -91,6 +91,41 @@ chatpdfbot_page = st.Page(
     icon=":material/picture_as_pdf:",
 )
 
+thanos_metrics = st.Page(
+    "views/thanos_metrics_app.py",
+    title="Thanos Metrics",
+    icon=":material/analytics:",
+)
+
+newrelic_data = st.Page(
+    "views/newrelic_data_app.py",
+    title="New Relic Data",
+    icon=":material/analytics:",
+)
+
+gcp_lb_metrics = st.Page(
+    "views/gcp_lb_metrics_app.py",
+    title="GCP LB Metrics",
+    icon=":material/analytics:",
+)
+
+lighthouse_runner = st.Page(
+    "views/lighthouse_runner_app.py",
+    title="Lighthouse Runner",
+    icon=":material/analytics:",
+)
+
+lighthouse_reports = st.Page(
+    "views/lighthouse_reports_app.py",
+    title="Lighthouse Reports",
+    icon=":material/analytics:",
+)
+
+apk_metrics = st.Page(
+    "views/apk_metrics_app.py",
+    title="APK Metrics",
+    icon=":material/analytics:",
+)
 # =====================
 # PAGE NAVIGATION STRUCTURE
 # =====================
