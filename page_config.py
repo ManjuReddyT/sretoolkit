@@ -41,35 +41,6 @@ prometheus_metrics = st.Page(
     icon=":material/monitor_heart:",
 )
 
-thanos_metrics = st.Page(
-    "views/thanosMetricsApp.py",
-    title="Thanos Metrics",
-    icon=":material/storage:",
-)
-
-gcp_lb_metrics = st.Page(
-    "views/gcpLBLogsVisualizer.py",
-    title="GCP LB Logs",
-    icon=":material/cloud:",
-)
-
-newrelic_data = st.Page(
-    "views/newRelicData.py",
-    title="NewRelic Data",
-    icon=":material/bug_report:",
-)
-
-lighthouse_runner = st.Page(
-    "runlighthouse.py",
-    title="Run Lighthouse",
-    icon=":material/flash_on:",
-)
-
-lighthouse_reports = st.Page(
-    "views/lighthouse/lhdashboard.py",
-    title="Lighthouse Reports",
-    icon=":material/bar_chart:",
-)
 
 crux_reports = st.Page(
     "views/cruxDashboard.py",
@@ -77,11 +48,6 @@ crux_reports = st.Page(
     icon=":material/public:",
 )
 
-apk_metrics = st.Page(
-    "views/apkMetrics.py",
-    title="Android/iOS Metrics",
-    icon=":material/android:",
-)
 
 run_tool = st.Page(
     "views/runpage.py",
